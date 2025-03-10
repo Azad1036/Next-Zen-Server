@@ -1,6 +1,6 @@
 const express = require("express");
 const cors = require("cors");
-const { MongoClient, ServerApiVersion } = require("mongodb");
+const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb");
 const app = express();
 const port = process.env.PORT || 4000;
 
@@ -25,6 +25,7 @@ app.get("/", (req, res) => {
 
 async function mainDB() {
   const compaignCollection = client.db("compaignDB").collection("compaign");
+  const donatedCollection = client.db("donatedDB").collection("donation");
   try {
     // await client.connect();
     // // Send a ping to confirm a successful connection
@@ -33,28 +34,49 @@ async function mainDB() {
     //   "Pinged your deployment. You successfully connected to MongoDB!"
     // );
 
+    // Display Campaign
     app.get("/campaigns", async (req, res) => {
       const allCampaignData = compaignCollection.find();
       const result = await allCampaignData.toArray();
       res.send(result);
     });
-    
+
+    app.get("/campaign/:id", async (req, res) => {
+      const id = req.params.id;
+      console.log(id);
+      const quary = { _id: new ObjectId(id) };
+      const user = await compaignCollection.findOne(quary);
+      res.send(user);
+    });
+
+    // my Campaign
+    app.get("/myCampaign/:email", async (req, res) => {
+      const email = req.params.email;
+      console.log(email);
+      const quary = { email };
+      const findEmail = compaignCollection.find(quary);
+      const result = await findEmail.toArray();
+      res.send(result);
+    });
+
+    // Add Campaign
     app.post("/addCampaign", async (req, res) => {
       const addCampaignData = req.body;
       // console.log(body);
       const result = await compaignCollection.insertOne(addCampaignData);
       res.send(result);
     });
-
-
-
-  } 
-  
-  
-  catch (error) {
+  } catch (error) {
     console.log(error);
     await client.close();
   }
+
+  // Donation Releted api
+  app.post("/donationUser", async (req, res) => {
+    const donatedUser = req.body;
+    const result = await donatedCollection.insertOne(donatedUser);
+    res.send(result);
+  });
 }
 
 mainDB();
