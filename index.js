@@ -41,6 +41,13 @@ async function mainDB() {
       res.send(result);
     });
 
+    app.get("/runningCampaigns", async (req, res) => {
+      const limit = parseInt(req.query.limit) || 0;
+      const allCampaignData = compaignCollection.find();
+      const result = await allCampaignData.toArray();
+      res.send(result);
+    });
+
     app.get("/campaign/:id", async (req, res) => {
       const id = req.params.id;
       const quary = { _id: new ObjectId(id) };
@@ -92,6 +99,16 @@ async function mainDB() {
     });
 
     // Donation Releted api
+
+    // my donation
+    app.get("/myDonation/:email", async (req, res) => {
+      const email = req.params.email;
+      const quary = { email };
+      const findEmail = donatedCollection.find(quary);
+      const result = await findEmail.toArray();
+      res.send(result);
+    });
+
     app.post("/donationUser", async (req, res) => {
       const donatedUser = req.body;
       const result = await donatedCollection.insertOne(donatedUser);
