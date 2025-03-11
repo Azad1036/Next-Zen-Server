@@ -43,7 +43,6 @@ async function mainDB() {
 
     app.get("/campaign/:id", async (req, res) => {
       const id = req.params.id;
-      console.log(id);
       const quary = { _id: new ObjectId(id) };
       const user = await compaignCollection.findOne(quary);
       res.send(user);
@@ -52,10 +51,35 @@ async function mainDB() {
     // my Campaign
     app.get("/myCampaign/:email", async (req, res) => {
       const email = req.params.email;
-      console.log(email);
       const quary = { email };
       const findEmail = compaignCollection.find(quary);
       const result = await findEmail.toArray();
+      res.send(result);
+    });
+
+    // update campaing
+    app.put("/updateCampaign/:id", async (req, res) => {
+      const id = req.params.id;
+      const quary = { _id: new ObjectId(id) };
+      // const update = await compaignCollection.findOne(quary);
+      // res.send(update)
+      const user = req.body;
+      const option = { upsert: true };
+      const updateCampaign = {
+        $set: {
+          photoUrl: user.photoUrl,
+          compaignTitle: user.compaignTitle,
+          compaignType: user.compaignType,
+          donationAmount: user.donationAmount,
+          description: user.description,
+          date: user.date,
+        },
+      };
+      const result = await compaignCollection.updateOne(
+        quary,
+        updateCampaign,
+        option
+      );
       res.send(result);
     });
 
@@ -66,17 +90,17 @@ async function mainDB() {
       const result = await compaignCollection.insertOne(addCampaignData);
       res.send(result);
     });
+
+    // Donation Releted api
+    app.post("/donationUser", async (req, res) => {
+      const donatedUser = req.body;
+      const result = await donatedCollection.insertOne(donatedUser);
+      res.send(result);
+    });
   } catch (error) {
     console.log(error);
     await client.close();
   }
-
-  // Donation Releted api
-  app.post("/donationUser", async (req, res) => {
-    const donatedUser = req.body;
-    const result = await donatedCollection.insertOne(donatedUser);
-    res.send(result);
-  });
 }
 
 mainDB();
