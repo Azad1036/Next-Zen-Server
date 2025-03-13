@@ -20,6 +20,10 @@ const client = new MongoClient(uri, {
   },
 });
 
+app.get("/", (req, res) => {
+  res.send("Run Express Js");
+});
+
 async function mainDB() {
   const compaignCollection = client.db("compaignDB").collection("compaign");
   const donatedCollection = client.db("donatedDB").collection("donation");

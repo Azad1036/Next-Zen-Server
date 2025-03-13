@@ -1,6 +1,6 @@
 # Crowdcube Backend
 
-This repository contains the backend code for *Crowdcube*, a crowdfunding platform where users can create, manage, and donate to campaigns. The backend is built with Node.js, Express, and MongoDB, and it is deployed on Vercel. The live server URL is: [https://crowdcube-backend.vercel.app](https://crowdcube-backend.vercel.app).
+This repository contains the backend code for _Crowdcube_, a crowdfunding platform where users can create, manage, and donate to campaigns. The backend is built with Node.js, Express, and MongoDB, and it is deployed on Vercel. The live server URL is: [https://next-zen-server.vercel.app/](https://next-zen-server.vercel.app/).
 
 ## Features
 
@@ -22,7 +22,7 @@ This repository contains the backend code for *Crowdcube*, a crowdfunding platfo
 
 ## Setup Instructions
 
-1. Clone the repository: `git clone https://github.com/yourusername/crowdcube-backend.git`
+1. Clone the repository: `https://github.com/Azad1036/Next-Zen-Server`
 2. Install dependencies: `npm install`
 3. Create a `.env` file with your MongoDB credentials and JWT secret (see `.env.example`).
 4. Run the server locally: `npm run dev`
