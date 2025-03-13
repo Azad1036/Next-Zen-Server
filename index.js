@@ -9,8 +9,7 @@ const port = process.env.PORT || 4000;
 app.use(cors());
 app.use(express.json());
 
-// const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@firstproject.mz7uu.mongodb.net/?retryWrites=true&w=majority&appName=FirstProject`;
-const uri = "mongodb://localhost:27017";
+const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@firstproject.mz7uu.mongodb.net/?retryWrites=true&w=majority&appName=FirstProject`;
 
 // Create a MongoClient with a MongoClientOptions object to set the Stable API version
 const client = new MongoClient(uri, {
@@ -33,7 +32,6 @@ async function mainDB() {
     });
 
     app.get("/runningCampaigns", async (req, res) => {
-      const limit = parseInt(req.query.limit) || 0;
       const allCampaignData = compaignCollection.find().limit(6);
       const result = await allCampaignData.toArray();
       res.send(result);
@@ -46,13 +44,19 @@ async function mainDB() {
       res.send(user);
     });
 
-
     // my Campaign
     app.get("/myCampaign/:email", async (req, res) => {
       const email = req.params.email;
       const quary = { email };
       const findEmail = compaignCollection.find(quary);
       const result = await findEmail.toArray();
+      res.send(result);
+    });
+
+    // Add Campaign
+    app.post("/addCampaign", async (req, res) => {
+      const addCampaignData = req.body;
+      const result = await compaignCollection.insertOne(addCampaignData);
       res.send(result);
     });
 
@@ -80,11 +84,12 @@ async function mainDB() {
       res.send(result);
     });
 
-    // Add Campaign
-    app.post("/addCampaign", async (req, res) => {
-      const addCampaignData = req.body;
-      const result = await compaignCollection.insertOne(addCampaignData);
-      res.send(result);
+    // Delected Campaign
+    app.delete("/campaign/:id", async (req, res) => {
+      const id = req.params.id;
+      const quary = { _id: new ObjectId(id) };
+      const deleteUser = await compaignCollection.deleteOne(quary);
+      res.send(deleteUser);
     });
 
     // Donation Releted api
