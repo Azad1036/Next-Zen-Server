@@ -9,8 +9,8 @@ const port = process.env.PORT || 4000;
 app.use(cors());
 app.use(express.json());
 
-
-const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@firstproject.mz7uu.mongodb.net/?retryWrites=true&w=majority&appName=FirstProject`;
+// const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@firstproject.mz7uu.mongodb.net/?retryWrites=true&w=majority&appName=FirstProject`;
+const uri = "mongodb://localhost:27017";
 
 // Create a MongoClient with a MongoClientOptions object to set the Stable API version
 const client = new MongoClient(uri, {
@@ -19,10 +19,6 @@ const client = new MongoClient(uri, {
     strict: true,
     deprecationErrors: true,
   },
-});
-
-app.get("/", (req, res) => {
-  res.send("Run Express Js");
 });
 
 async function mainDB() {
@@ -50,6 +46,7 @@ async function mainDB() {
       res.send(user);
     });
 
+
     // my Campaign
     app.get("/myCampaign/:email", async (req, res) => {
       const email = req.params.email;
@@ -68,8 +65,8 @@ async function mainDB() {
       const updateCampaign = {
         $set: {
           photoUrl: user.photoUrl,
-          compaignTitle: user.compaignTitle,
-          compaignType: user.compaignType,
+          campaignTitle: user.campaignTitle,
+          campaignType: user.campaignType,
           donationAmount: user.donationAmount,
           description: user.description,
           date: user.date,
@@ -86,12 +83,9 @@ async function mainDB() {
     // Add Campaign
     app.post("/addCampaign", async (req, res) => {
       const addCampaignData = req.body;
-      // console.log(body);
       const result = await compaignCollection.insertOne(addCampaignData);
       res.send(result);
     });
-
-
 
     // Donation Releted api
     // my donation
